@@ -4,4 +4,8 @@ public class BibliotecaService {
     public static String welcome() {
         return "Welcome to Biblioteca!";
     }
+
+    public static String showBookList() {
+        return "Book1\nBook2\nBook3";
+    }
 }
