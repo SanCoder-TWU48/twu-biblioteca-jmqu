@@ -35,43 +35,33 @@ public class BibliotecaAppTest {
     public void biblioteca_should_output_correctly() {
         BibliotecaApp.biblioteca(new Scanner("0\n1\n2\n"), new PrintStream(outputStream));
 
-        String expectedOutput = String.join("\n",
-                "",
-                "Welcome to Biblioteca!",
+        String expectedMenu = String.join("\n",
                 "",
                 "====================",
                 "        Menu        ",
                 "--------------------",
                 "(1) List Books",
                 "(2) Quit",
-                "--------------------",
+                "--------------------");
+        String expectedOutput = String.join("\n",
+                "",
+                "Welcome to Biblioteca!",
+                expectedMenu,
                 "",
                 "Please choose (item number):",
                 "",
                 "Select a valid option!",
-                "",
-                "====================",
-                "        Menu        ",
-                "--------------------",
-                "(1) List Books",
-                "(2) Quit",
-                "--------------------",
+                expectedMenu,
                 "",
                 "Please choose (item number):",
                 "",
                 "Book1\tAuthor1\t2003",
                 "Book2\tAuthor2\t2005",
                 "Book3\tAuthor3\t2013",
-                "",
-                "====================",
-                "        Menu        ",
-                "--------------------",
-                "(1) List Books",
-                "(2) Quit",
-                "--------------------",
+                expectedMenu,
                 "",
                 "Please choose (item number):"
-                ) + "\n";
+        ) + "\n";
 
         assertEquals(expectedOutput, outputStream.toString());
     }
