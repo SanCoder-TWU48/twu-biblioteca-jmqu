@@ -31,9 +31,11 @@ public class BibliotecaAppTest {
         BibliotecaApp.main(new String[0]);
         String expectedOutput = String.join("\n",
                 "Welcome to Biblioteca!",
-                "Book1\tAuthor1\t2003",
-                "Book2\tAuthor2\t2005",
-                "Book3\tAuthor3\t2013"
+                "====================",
+                "        Menu        ",
+                "--------------------",
+                "(1) List Books",
+                "--------------------"
                 ) + "\n";
         assertEquals(expectedOutput, outputStream.toString());
     }

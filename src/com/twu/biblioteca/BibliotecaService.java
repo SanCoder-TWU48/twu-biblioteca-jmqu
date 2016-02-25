@@ -26,4 +26,25 @@ public class BibliotecaService {
                 .reduce((b1, b2) -> b1 + "\n" + b2)
                 .get();
     }
+
+    public String showMenu() {
+        String menu = showMenuTitle();
+        menu = showMenuItems(menu);
+        menu = showMenuBottom(menu);
+        return menu;
+    }
+
+    private String showMenuBottom(String menu) {
+        return menu + "--------------------";
+    }
+
+    private String showMenuItems(String menu) {
+        return menu + "(1) List Books\n";
+    }
+
+    private String showMenuTitle() {
+        return  "====================\n" +
+                "        Menu        \n" +
+                "--------------------\n";
+    }
 }

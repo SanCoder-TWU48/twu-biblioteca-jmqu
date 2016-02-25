@@ -1,6 +1,5 @@
 package com.twu.biblioteca;//Created by SanCoder on 2/23/16.
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -21,5 +20,16 @@ public class BibliotecaServiceTest {
                 "Book2\tAuthor2\t2005\n" +
                 "Book3\tAuthor3\t2013",
                 bibliotecaService.showBookList());
+    }
+
+    @Test
+    public void showMenu_should_give_a_menu() {
+        String expectedOutput = String.join("\n",
+                "====================",
+                "        Menu        ",
+                "--------------------",
+                "(1) List Books",
+                "--------------------");
+        assertEquals(expectedOutput, bibliotecaService.showMenu());
     }
 }
