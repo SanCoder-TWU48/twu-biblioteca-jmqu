@@ -27,6 +27,13 @@ public class BibliotecaAppTest {
     }
 
     @Test
+    public void getInput_should_print_helping_message() {
+        String message = "test";
+        BibliotecaApp.getInput(message);
+        assertEquals(message + '\n', outputStream.toString());
+    }
+
+    @Test
     public void main_should_output_correctly() {
         BibliotecaApp.main(new String[0]);
         String expectedOutput = String.join("\n",
@@ -35,7 +42,8 @@ public class BibliotecaAppTest {
                 "        Menu        ",
                 "--------------------",
                 "(1) List Books",
-                "--------------------"
+                "--------------------",
+                "Please choose (item number):"
                 ) + "\n";
         assertEquals(expectedOutput, outputStream.toString());
     }
