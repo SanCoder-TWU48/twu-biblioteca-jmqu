@@ -20,7 +20,7 @@ public class BibliotecaService {
         return "Welcome to Biblioteca!";
     }
 
-    public String showBookList() {
+    private String showBookList() {
         return bookList.stream()
                 .map(b -> String.format("%s\t%s\t%s", b.getName(), b.getAuthor(), b.getPublishedYear()))
                 .reduce((b1, b2) -> b1 + "\n" + b2)
@@ -34,17 +34,35 @@ public class BibliotecaService {
         return menu;
     }
 
+    public String dispatcher(String menuItem) {
+        switch (menuItem) {
+            case "1":
+                return showBookList();
+            case "2":
+                return quit();
+            default:
+                return "Select a valid option!";
+        }
+    }
+
     private String showMenuBottom(String menu) {
         return menu + "--------------------";
     }
 
     private String showMenuItems(String menu) {
-        return menu + "(1) List Books\n";
+        String items =
+                "(1) List Books\n" +
+                "(2) Quit\n";
+        return menu + items;
     }
 
     private String showMenuTitle() {
-        return  "====================\n" +
+        return "====================\n" +
                 "        Menu        \n" +
                 "--------------------\n";
+    }
+
+    private String quit() {
+        return null;
     }
 }
