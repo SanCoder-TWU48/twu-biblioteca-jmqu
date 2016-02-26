@@ -28,6 +28,8 @@ public class BibliotecaService {
         switch (action.getType()) {
             case "welcome":
             case "list_books":
+            case "checkout_success":
+            case "checkout_fail":
             case "invalid_menu_item":
                 return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu);
             case "show_menu":
@@ -35,15 +37,16 @@ public class BibliotecaService {
                     case "1":
                         return new Action("list_books", Action.OUTPUT_ONLY, this::listBooks);
                     case "2":
-                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::checkoutBookHint);
+                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::checkoutHint);
                     case "9":
                         return new Action("quit", Action.OUTPUT_ONLY, this::sayGoodbye);
                     default:
                         return new Action("invalid_menu_item", Action.OUTPUT_ONLY, this::invalidMenuItem);
                 }
             case "checkout_book":
-                checkoutBook(action.getInput());
-                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu);
+                return checkoutBook(action.getInput()) ?
+                        new Action("checkout_success", Action.OUTPUT_ONLY, this::checkoutSuccess) :
+                        new Action("checkout_fail", Action.OUTPUT_ONLY, this::checkoutFail);
             case "quit":
             default:
                 return null;
@@ -79,7 +82,7 @@ public class BibliotecaService {
 
     private String listBooks() {
         return bookList.stream()
-                .filter(b -> b.isAvailable())
+                .filter(Book::isAvailable)
                 .map(b -> String.format("%s\t%s\t%s", b.getName(), b.getAuthor(), b.getPublishedYear()))
                 .reduce((b1, b2) -> b1 + "\n" + b2)
                 .get();
@@ -92,8 +95,16 @@ public class BibliotecaService {
                 .count() > 0;
     }
 
-    private String checkoutBookHint() {
+    private String checkoutHint() {
         return "Please input the book name: ";
+    }
+
+    private String checkoutSuccess() {
+        return "Thank you! Enjoy the book";
+    }
+
+    private String checkoutFail() {
+        return "That book is not available.";
     }
 
     private String invalidMenuItem() {

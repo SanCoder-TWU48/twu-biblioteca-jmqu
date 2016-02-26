@@ -92,13 +92,15 @@ public class BibliotecaServiceTest {
     }
 
     @Test
-    public void should_checkout_the_input_book_and_give_a_menu_action_when_action_is_a_checkout_book_action() {
+    public void should_checkout_the_input_book_and_give_a_checkout_success_action_when_action_is_a_checkout_book_action() {
         String expectedOutput = String.join("\n",
                 "Book1\tAuthor1\t2003",
                 "Book3\tAuthor3\t2013");
         Action action = new Action("checkout_book", Action.OUTPUT_INPUT, null);
         action.setInput("Book2");
-        Action menuAction = bibliotecaService.dispatcher(action);
+        Action successAction = bibliotecaService.dispatcher(action);
+        assertEquals("Thank you! Enjoy the book", successAction.run());
+        Action menuAction = bibliotecaService.dispatcher(successAction);
         menuAction.setInput("1");
         assertEquals("show_menu", menuAction.getType());
         assertEquals(expectedOutput, bibliotecaService.dispatcher(menuAction).run());

@@ -47,6 +47,8 @@ public class BibliotecaAppTest {
                 expectedMenu,
                 "",
                 "Please input the book name: ",
+                "",
+                "Thank you! Enjoy the book",
                 expectedMenu,
                 "",
                 "Book1\tAuthor1\t2003",
