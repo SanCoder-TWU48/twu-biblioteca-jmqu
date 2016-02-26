@@ -51,11 +51,13 @@ public class BibliotecaService {
                     case "1":
                         return new Action("list_books", Action.OUTPUT_ONLY, this::listBooks);
                     case "2":
-                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::checkoutHint);
+                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::bookCheckoutHint);
                     case "3":
                         return new Action("return_book", Action.OUTPUT_INPUT, this::returnHint);
                     case "4":
                         return new Action("list_movies", Action.OUTPUT_ONLY, this::listMovies);
+                    case "5":
+                        return new Action("checkout_movie", Action.OUTPUT_INPUT, this::movieCheckoutHint);
                     case "9":
                         return new Action("quit", Action.OUTPUT_ONLY, this::sayGoodbye);
                     default:
@@ -102,6 +104,7 @@ public class BibliotecaService {
                 "(2) Checkout Book",
                 "(3) Return Book",
                 "(4) List Movies",
+                "(5) Checkout Movie",
                 "(9) Quit");
     }
 
@@ -150,8 +153,12 @@ public class BibliotecaService {
                 .count() > 0;
     }
 
-    private String checkoutHint() {
+    private String bookCheckoutHint() {
         return "Please input the book name: ";
+    }
+
+    private String movieCheckoutHint() {
+        return "Please input the movie name: ";
     }
 
     private String returnHint() {

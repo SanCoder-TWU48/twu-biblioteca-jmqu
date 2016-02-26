@@ -30,6 +30,7 @@ public class BibliotecaAppTest {
                 "(2) Checkout Book",
                 "(3) Return Book",
                 "(4) List Movies",
+                "(5) Checkout Movie",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");
@@ -176,6 +177,61 @@ public class BibliotecaAppTest {
                 expectedMenu,
                 expectedBye);
         BibliotecaApp.biblioteca(new Scanner("4\n9\n"), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_be_able_to_checkout_a_available_movie() {
+        String expectedMoviesWithoutMovie2 = "\nMovie1\tDirector1\t2003\t8\nMovie3\tDirector3\t2013\tunrated";
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                "",
+                "Please input the movie name: ",
+                "",
+                "Thank you! Enjoy the movie",
+                expectedMenu,
+                expectedMoviesWithoutMovie2,
+                expectedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("5\nMovie2\n4\n9\n"), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_give_a_invalid_message_when_checkout_a_non_exist_movie() {
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                "",
+                "Please input the movie name: ",
+                "",
+                "That movie is not available.",
+                expectedMenu,
+                expectedAllMovies,
+                expectedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("5\nMovie4\n4\n9\n"), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_give_a_invalid_message_when_checkout_a_unavailable_movie() {
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                "",
+                "Please input the movie name: ",
+                "",
+                "Thank you! Enjoy the movie",
+                expectedMenu,
+                "",
+                "Please input the movie name: ",
+                "",
+                "That movie is not available.",
+                expectedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("5\nMovie2\n5\nMovie2\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 }
