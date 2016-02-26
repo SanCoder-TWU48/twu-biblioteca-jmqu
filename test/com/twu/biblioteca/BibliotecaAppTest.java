@@ -75,6 +75,15 @@ public class BibliotecaAppTest {
                 expectedMenu,
                 "",
                 "Please input the book name: ",
+                "",
+                "That is not a valid book to return.",
+                expectedMenu,
+                expectedBooksWithoutBook2,
+                expectedMenu,
+                "",
+                "Please input the book name: ",
+                "",
+                "Thank you for returning the book.",
                 expectedMenu,
                 expectedAllBooks,
                 expectedMenu,
@@ -82,7 +91,7 @@ public class BibliotecaAppTest {
                 "Good bye."
         ) + "\n";
 
-        String inputSeq = "0\n1\n2\nBook4\n1\n2\nBook2\n1\n2\nBook2\n1\n3\nBook2\n1\n9\n";
+        String inputSeq = "0\n1\n2\nBook4\n1\n2\nBook2\n1\n2\nBook2\n1\n3\nBook4\n1\n3\nBook2\n1\n9\n";
 
         BibliotecaApp.biblioteca(new Scanner(inputSeq), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());

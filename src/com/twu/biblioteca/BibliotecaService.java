@@ -30,6 +30,8 @@ public class BibliotecaService {
             case "list_books":
             case "checkout_success":
             case "checkout_fail":
+            case "return_success":
+            case "return_fail":
             case "invalid_menu_item":
                 return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu);
             case "show_menu":
@@ -50,8 +52,9 @@ public class BibliotecaService {
                         new Action("checkout_success", Action.OUTPUT_ONLY, this::checkoutSuccess) :
                         new Action("checkout_fail", Action.OUTPUT_ONLY, this::checkoutFail);
             case "return_book":
-                returnBook(action.getInput());
-                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu);
+                return returnBook(action.getInput()) ?
+                        new Action("return_success", Action.OUTPUT_ONLY, this::returnSuccess) :
+                        new Action("return_fail", Action.OUTPUT_ONLY, this::returnFail);
             case "quit":
             default:
                 return null;
@@ -104,7 +107,6 @@ public class BibliotecaService {
 
     private boolean returnBook(String bookName) {
         return bookList.stream()
-                .filter(b -> !b.isAvailable())
                 .filter(book -> book.getName().equals(bookName))
                 .peek(Book::checkin)
                 .count() > 0;
@@ -124,6 +126,14 @@ public class BibliotecaService {
 
     private String checkoutFail() {
         return "That book is not available.";
+    }
+
+    private String returnSuccess() {
+        return "Thank you for returning the book.";
+    }
+
+    private String returnFail() {
+        return "That is not a valid book to return.";
     }
 
     private String invalidMenuItem() {

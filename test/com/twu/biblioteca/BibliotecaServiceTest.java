@@ -135,16 +135,32 @@ public class BibliotecaServiceTest {
     }
 
     @Test
-    public void should_return_the_input_book_when_action_is_a_checkout_book_action() {
+    public void should_return_the_input_book_and_give_a_return_success_action_when_action_is_a_checkout_book_action() {
+        Action checkoutBook = new Action("checkout_book", Action.OUTPUT_INPUT, null);
+        checkoutBook.setInput("Book2");
+        bibliotecaService.dispatcher(checkoutBook);
+
         String expectedOutput = String.join("\n",
                 "Book1\tAuthor1\t2003",
                 "Book2\tAuthor2\t2005",
                 "Book3\tAuthor3\t2013");
-        Action action = new Action("return_book", Action.OUTPUT_INPUT, null);
-        action.setInput("Book2");
-        Action menuAction = bibliotecaService.dispatcher(action);
+        Action returnBook = new Action("return_book", Action.OUTPUT_INPUT, null);
+        returnBook.setInput("Book2");
+        Action returnSuccess = bibliotecaService.dispatcher(returnBook);
+        assertEquals("return_success", returnSuccess.getType());
+        assertEquals("Thank you for returning the book.", returnSuccess.run());
+        Action menuAction = bibliotecaService.dispatcher(returnSuccess);
         menuAction.setInput("1");
         assertEquals(expectedOutput, bibliotecaService.dispatcher(menuAction).run());
+    }
+
+    @Test
+    public void should_give_a_return_fail_action_when_input_book_name_do_not_exist() {
+        Action action = new Action("return_book", Action.OUTPUT_INPUT, null);
+        action.setInput("Book4");
+        Action returnFail = bibliotecaService.dispatcher(action);
+        assertEquals("return_fail", returnFail.getType());
+        assertEquals("That is not a valid book to return.", returnFail.run());
     }
 
     @Test

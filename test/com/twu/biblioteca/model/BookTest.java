@@ -13,4 +13,11 @@ public class BookTest {
         book.checkout();
         assertFalse(book.isAvailable());
     }
+
+    @Test
+    public void checkin_should_make_book_available() {
+        Book book = new Book("name", "auther", "year");
+        book.checkin();
+        assertTrue(book.isAvailable());
+    }
 }
