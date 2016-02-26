@@ -3,6 +3,7 @@ package com.twu.biblioteca;//Created by SanCoder on 2/23/16.
 import com.twu.biblioteca.model.Book;
 import com.twu.biblioteca.model.LibraryResource;
 import com.twu.biblioteca.model.Movie;
+import com.twu.biblioteca.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 
 public class BibliotecaService {
 
+    private List<User> userList;
     private List<Book> bookList;
     private List<Movie> movieList;
 
@@ -20,6 +22,10 @@ public class BibliotecaService {
     }
 
     private void initData() {
+        userList = new ArrayList<User>();
+        userList.add(new User("admin", "111-1111"));
+        userList.add(new User("user", "222-2222"));
+
         bookList = new ArrayList<Book>();
         bookList.add(new Book("Book1", "Author1", "2003"));
         bookList.add(new Book("Book2", "Author2", "2005"));
@@ -45,40 +51,62 @@ public class BibliotecaService {
             case "return_success":
             case "return_fail":
             case "invalid_menu_item":
-                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu);
+                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu, action.getAllContext());
             case "show_menu":
                 switch (action.getInput()) {
                     case "1":
-                        return new Action("list_books", Action.OUTPUT_ONLY, this::listBooks);
+                        return new Action("list_books", Action.OUTPUT_ONLY, this::listBooks, action.getAllContext());
                     case "2":
-                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::bookCheckoutHint);
+                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::bookCheckoutHint, action.getAllContext());
                     case "3":
-                        return new Action("return_book", Action.OUTPUT_INPUT, this::returnHint);
+                        return new Action("return_book", Action.OUTPUT_INPUT, this::returnHint, action.getAllContext());
                     case "4":
-                        return new Action("list_movies", Action.OUTPUT_ONLY, this::listMovies);
+                        return new Action("list_movies", Action.OUTPUT_ONLY, this::listMovies, action.getAllContext());
                     case "5":
-                        return new Action("checkout_movie", Action.OUTPUT_INPUT, this::movieCheckoutHint);
+                        return new Action("checkout_movie", Action.OUTPUT_INPUT, this::movieCheckoutHint, action.getAllContext());
+                    case "8":
+                        return new Action("login", Action.OUTPUT_INPUT, this::loginHint, action.getAllContext());
                     case "9":
-                        return new Action("quit", Action.OUTPUT_ONLY, this::sayGoodbye);
+                        return new Action("quit", Action.OUTPUT_ONLY, this::sayGoodbye, action.getAllContext());
                     default:
-                        return new Action("invalid_menu_item", Action.OUTPUT_ONLY, this::invalidMenuItem);
+                        return new Action("invalid_menu_item", Action.OUTPUT_ONLY, this::invalidMenuItem, action.getAllContext());
                 }
             case "checkout_book":
                 return checkoutBook(action.getInput()) ?
-                        new Action("checkout_success", Action.OUTPUT_ONLY, this::bookCheckoutSuccess) :
-                        new Action("checkout_fail", Action.OUTPUT_ONLY, this::bookCheckoutFail);
+                        new Action("checkout_success", Action.OUTPUT_ONLY, this::bookCheckoutSuccess, action.getAllContext()) :
+                        new Action("checkout_fail", Action.OUTPUT_ONLY, this::bookCheckoutFail, action.getAllContext());
             case "return_book":
                 return returnBook(action.getInput()) ?
-                        new Action("return_success", Action.OUTPUT_ONLY, this::bookReturnSuccess) :
-                        new Action("return_fail", Action.OUTPUT_ONLY, this::bookReturnFail);
+                        new Action("return_success", Action.OUTPUT_ONLY, this::bookReturnSuccess, action.getAllContext()) :
+                        new Action("return_fail", Action.OUTPUT_ONLY, this::bookReturnFail, action.getAllContext());
             case "checkout_movie":
                 return checkoutMovie(action.getInput()) ?
-                        new Action("checkout_success", Action.OUTPUT_ONLY, this::movieCheckoutSuccess) :
-                        new Action("checkout_fail", Action.OUTPUT_ONLY, this::movieCheckoutFail);
+                        new Action("checkout_success", Action.OUTPUT_ONLY, this::movieCheckoutSuccess, action.getAllContext()) :
+                        new Action("checkout_fail", Action.OUTPUT_ONLY, this::movieCheckoutFail, action.getAllContext());
+            case "login":
+                return new Action("password", Action.OUTPUT_INPUT, this::passwordHint, action.getAllContext())
+                        .setContext("library_number", action.getInput());
+            case "password":
+                if(userValidate(action.getContext("library_number"), action.getInput()))
+                    return new Action("login_success", Action.OUTPUT_ONLY, this::loginSuccess, action.getAllContext())
+                            .setContext("logged", "true");
+                else
+                    return new Action("login_fail", Action.OUTPUT_ONLY, this::loginFail, action.getAllContext())
+                            .removeContext("library_number");
+            case "login_success":
+                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu, action.getAllContext());
+            case "login_fail":
+                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu, action.getAllContext());
             case "quit":
             default:
                 return null;
         }
+    }
+
+    private boolean userValidate(String library_number, String password) {
+        return userList.stream()
+                .filter(u -> u.validate(library_number, password))
+                .count() > 0;
     }
 
     private String welcome() {
@@ -105,6 +133,7 @@ public class BibliotecaService {
                 "(3) Return Book",
                 "(4) List Movies",
                 "(5) Checkout Movie",
+                "(8) Login",
                 "(9) Quit");
     }
 
@@ -191,6 +220,22 @@ public class BibliotecaService {
 
     private String invalidMenuItem() {
         return "Select a valid option!";
+    }
+
+    private String loginHint() {
+        return "Please input your library number: ";
+    }
+
+    private String passwordHint() {
+        return "Please input your password: ";
+    }
+
+    private String loginSuccess() {
+        return "Login success.";
+    }
+
+    private String loginFail() {
+        return "Login failed.";
     }
 
     private String sayGoodbye() {

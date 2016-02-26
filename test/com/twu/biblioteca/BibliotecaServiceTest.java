@@ -41,6 +41,7 @@ public class BibliotecaServiceTest {
                 "(3) Return Book",
                 "(4) List Movies",
                 "(5) Checkout Movie",
+                "(8) Login",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");

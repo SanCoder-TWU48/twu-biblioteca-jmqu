@@ -31,6 +31,7 @@ public class BibliotecaAppTest {
                 "(3) Return Book",
                 "(4) List Movies",
                 "(5) Checkout Movie",
+                "(8) Login",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");
@@ -232,6 +233,40 @@ public class BibliotecaAppTest {
                 expectedMenu,
                 expectedBye);
         BibliotecaApp.biblioteca(new Scanner("5\nMovie2\n5\nMovie2\n9\n"), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_be_able_to_successfully_login() {
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                "",
+                "Please input your library number: ",
+                "",
+                "Please input your password: ",
+                "",
+                "Login success.",
+                expectedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("8\nadmin\n111-1111\n9\n"), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_give_an_invalid_message_when_login_failed() {
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                "",
+                "Please input your library number: ",
+                "",
+                "Please input your password: ",
+                "",
+                "Login failed.",
+                expectedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("8\nadmin\n222-1111\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 }
