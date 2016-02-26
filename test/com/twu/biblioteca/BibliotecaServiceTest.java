@@ -107,6 +107,20 @@ public class BibliotecaServiceTest {
     }
 
     @Test
+    public void should_give_a_checkout_fail_action_when_book_is_not_available() {
+        Action oldCheckoutAction = new Action("checkout_book", Action.OUTPUT_INPUT, null);
+        oldCheckoutAction.setInput("Book2");
+        Action successAction = bibliotecaService.dispatcher(oldCheckoutAction);
+        Action menuAction = bibliotecaService.dispatcher(successAction);
+        menuAction.setInput("2");
+        Action checkoutAction = bibliotecaService.dispatcher(menuAction);
+        checkoutAction.setInput("Book2");
+        Action failAction = bibliotecaService.dispatcher(checkoutAction);
+        assertEquals("checkout_fail", failAction.getType());
+        assertEquals("That book is not available.", failAction.run());
+    }
+
+    @Test
     public void should_give_a_quit_action_when_action_is_menu_and_input_is_9() {
         Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
         action.setInput("9");

@@ -21,8 +21,6 @@ public class BibliotecaAppTest {
 
     @Test
     public void biblioteca_should_output_correctly() {
-        BibliotecaApp.biblioteca(new Scanner("0\n1\n2\nBook2\n1\n9\n"), new PrintStream(outputStream));
-
         String expectedMenu = String.join("\n",
                 "",
                 "====================",
@@ -33,6 +31,17 @@ public class BibliotecaAppTest {
                 "--------------------",
                 "Please choose (item number):");
 
+        String expectedAllBooks = String.join("\n",
+                "",
+                "Book1\tAuthor1\t2003",
+                "Book2\tAuthor2\t2005",
+                "Book3\tAuthor3\t2013");
+
+        String expectedBooksWithoutBook2 = String.join("\n",
+                "",
+                "Book1\tAuthor1\t2003",
+                "Book3\tAuthor3\t2013");
+
         String expectedOutput = String.join("\n",
                 "",
                 "Welcome to Biblioteca!",
@@ -40,24 +49,34 @@ public class BibliotecaAppTest {
                 "",
                 "Select a valid option!",
                 expectedMenu,
+                expectedAllBooks,
+                expectedMenu,
                 "",
-                "Book1\tAuthor1\t2003",
-                "Book2\tAuthor2\t2005",
-                "Book3\tAuthor3\t2013",
+                "Please input the book name: ",
+                "",
+                "That book is not available.",
+                expectedMenu,
+                expectedAllBooks,
                 expectedMenu,
                 "",
                 "Please input the book name: ",
                 "",
                 "Thank you! Enjoy the book",
                 expectedMenu,
+                expectedBooksWithoutBook2,
+                expectedMenu,
                 "",
-                "Book1\tAuthor1\t2003",
-                "Book3\tAuthor3\t2013",
+                "Please input the book name: ",
+                "",
+                "That book is not available.",
+                expectedMenu,
+                expectedBooksWithoutBook2,
                 expectedMenu,
                 "",
                 "Good bye."
         ) + "\n";
 
+        BibliotecaApp.biblioteca(new Scanner("0\n1\n2\nBook4\n1\n2\nBook2\n1\n2\nBook2\n1\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 }

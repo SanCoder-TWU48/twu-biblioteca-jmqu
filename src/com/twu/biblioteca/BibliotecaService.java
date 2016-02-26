@@ -90,6 +90,7 @@ public class BibliotecaService {
 
     private boolean checkoutBook(String bookName) {
         return bookList.stream()
+                .filter(Book::isAvailable)
                 .filter(book -> book.getName().equals(bookName))
                 .peek(Book::checkout)
                 .count() > 0;
