@@ -50,6 +50,25 @@ public class BibliotecaServiceTest {
     }
 
     @Test
+    public void menu_action_should_show_a_logged_menu_and_ask_to_choose_when_user_logged() {
+        String expectedOutput = String.join("\n",
+                "====================",
+                "        Menu        ",
+                "(1) List Books",
+                "(2) Checkout Book",
+                "(3) Return Book",
+                "(4) List Movies",
+                "(5) Checkout Movie",
+                "(8) User Information",
+                "(9) Quit",
+                "--------------------",
+                "Please choose (item number):");
+        Action menu = bibliotecaService.dispatcher(new Action("welcome", Action.OUTPUT_ONLY, null).setContext("logged", "true"));
+        assertEquals(expectedOutput, menu.run());
+    }
+
+
+    @Test
     public void should_give_a_invalid_menu_item_action_when_action_is_menu_and_input_is_invalid() {
         Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
         action.setInput("0");
@@ -182,6 +201,52 @@ public class BibliotecaServiceTest {
                 "Movie2\tDirector2\t2005\t5",
                 "Movie3\tDirector3\t2013\tunrated");
         assertEquals(expectedOutput, bibliotecaService.dispatcher(action).run());
+    }
+
+    @Test
+    public void should_give_a_login_action_when_action_is_menu_and_input_is_8() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("8");
+        assertEquals("login", bibliotecaService.dispatcher(action).getType());
+    }
+
+    @Test
+    public void login_action_should_show_hint_and_ask_library_number() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("8");
+        assertEquals("Please input your library number: ", bibliotecaService.dispatcher(action).run());
+    }
+
+    @Test
+    public void should_save_input_as_context_and_give_a_password_action_when_action_is_login() {
+        Action action = new Action("login", Action.OUTPUT_INPUT, null);
+        action.setInput("admin");
+        assertEquals("password", bibliotecaService.dispatcher(action).getType());
+        assertEquals("admin", bibliotecaService.dispatcher(action).getContext("library_number"));
+    }
+
+    @Test
+    public void password_action_should_show_hint_and_ask_library_number() {
+        Action action = new Action("login", Action.OUTPUT_INPUT, null);
+        action.setInput("admin");
+        assertEquals("Please input your password: ", bibliotecaService.dispatcher(action).run());
+    }
+
+    @Test
+    public void should_validate_user_input_and_save_logged_as_context_and_give_a_login_success_action_when_action_is_password() {
+        Action action = new Action("password", Action.OUTPUT_INPUT, null).setContext("library_number", "admin");
+        action.setInput("111-1111");
+        assertEquals("login_success", bibliotecaService.dispatcher(action).getType());
+        assertEquals("true", bibliotecaService.dispatcher(action).getContext("logged"));
+    }
+
+    @Test
+    public void should_remove_library_number_in_context_and_give_a_login_fail_action_when_action_is_password_but_password_is_wrong() {
+        Action action = new Action("password", Action.OUTPUT_INPUT, null).setContext("library_number", "admin");
+        action.setInput("111-2222");
+        assertEquals("login_fail", bibliotecaService.dispatcher(action).getType());
+        assertEquals("", bibliotecaService.dispatcher(action).getContext("logged"));
+        assertEquals("", bibliotecaService.dispatcher(action).getContext("library_number"));
     }
 
     @Test

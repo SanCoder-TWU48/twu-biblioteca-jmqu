@@ -54,7 +54,7 @@ public class Action {
     }
 
     public String getContext(String key) {
-        return context.get(key);
+        return context.getOrDefault(key, "");
     }
 
     public Action setContext(String key, String value) {

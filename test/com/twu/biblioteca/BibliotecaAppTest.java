@@ -18,6 +18,7 @@ public class BibliotecaAppTest {
     private String expectedWelcome;
     private String expectedBye;
     private String expectedAllMovies;
+    private String expectedLoggedMenu;
 
     @Before
     public void setUp() {
@@ -32,6 +33,19 @@ public class BibliotecaAppTest {
                 "(4) List Movies",
                 "(5) Checkout Movie",
                 "(8) Login",
+                "(9) Quit",
+                "--------------------",
+                "Please choose (item number):");
+        expectedLoggedMenu = String.join("\n",
+                "",
+                "====================",
+                "        Menu        ",
+                "(1) List Books",
+                "(2) Checkout Book",
+                "(3) Return Book",
+                "(4) List Movies",
+                "(5) Checkout Movie",
+                "(8) User Information",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");
@@ -237,7 +251,7 @@ public class BibliotecaAppTest {
     }
 
     @Test
-    public void biblioteca_should_be_able_to_successfully_login() {
+    public void biblioteca_should_be_able_to_successfully_login_and_show_logged_menu() {
         String expectedOutput = String.join("\n",
                 expectedWelcome,
                 expectedMenu,
@@ -247,7 +261,7 @@ public class BibliotecaAppTest {
                 "Please input your password: ",
                 "",
                 "Login success.",
-                expectedMenu,
+                expectedLoggedMenu,
                 expectedBye);
         BibliotecaApp.biblioteca(new Scanner("8\nadmin\n111-1111\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());

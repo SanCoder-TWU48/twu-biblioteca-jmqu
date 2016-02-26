@@ -23,8 +23,8 @@ public class BibliotecaService {
 
     private void initData() {
         userList = new ArrayList<User>();
-        userList.add(new User("admin", "111-1111"));
-        userList.add(new User("user", "222-2222"));
+        userList.add(new User("admin", "111-1111", "ADMIN", "ADDRESS1", "11111111"));
+        userList.add(new User("user", "222-2222", "USER", "ADDRESS2", "22222222"));
 
         bookList = new ArrayList<Book>();
         bookList.add(new Book("Book1", "Author1", "2003"));
@@ -51,7 +51,12 @@ public class BibliotecaService {
             case "return_success":
             case "return_fail":
             case "invalid_menu_item":
-                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu, action.getAllContext());
+            case "login_success":
+            case "login_fail":
+                if(action.getContext("logged").equals("true"))
+                    return new Action("show_menu", Action.OUTPUT_INPUT, () -> showMenu(true), action.getAllContext());
+                else
+                    return new Action("show_menu", Action.OUTPUT_INPUT, () -> showMenu(false), action.getAllContext());
             case "show_menu":
                 switch (action.getInput()) {
                     case "1":
@@ -87,16 +92,12 @@ public class BibliotecaService {
                 return new Action("password", Action.OUTPUT_INPUT, this::passwordHint, action.getAllContext())
                         .setContext("library_number", action.getInput());
             case "password":
-                if(userValidate(action.getContext("library_number"), action.getInput()))
+                if (userValidate(action.getContext("library_number"), action.getInput()))
                     return new Action("login_success", Action.OUTPUT_ONLY, this::loginSuccess, action.getAllContext())
                             .setContext("logged", "true");
                 else
                     return new Action("login_fail", Action.OUTPUT_ONLY, this::loginFail, action.getAllContext())
                             .removeContext("library_number");
-            case "login_success":
-                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu, action.getAllContext());
-            case "login_fail":
-                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu, action.getAllContext());
             case "quit":
             default:
                 return null;
@@ -113,10 +114,10 @@ public class BibliotecaService {
         return "Welcome to Biblioteca!";
     }
 
-    private String showMenu() {
+    private String showMenu(boolean isLogged) {
         return String.join("\n",
                 showDoubleSplitter(),
-                showMenuBody(),
+                showMenuBody(isLogged),
                 showSingleSplitter(),
                 "Please choose (item number):");
     }
@@ -125,16 +126,16 @@ public class BibliotecaService {
         return "--------------------";
     }
 
-    private String showMenuBody() {
-        return String.join("\n",
+    private String showMenuBody(boolean isLogged) {
+        String menu = String.join("\n",
                 "        Menu        ",
                 "(1) List Books",
                 "(2) Checkout Book",
                 "(3) Return Book",
                 "(4) List Movies",
-                "(5) Checkout Movie",
-                "(8) Login",
-                "(9) Quit");
+                "(5) Checkout Movie") + "\n";
+        menu += isLogged ? "(8) User Information\n" : "(8) Login\n";
+        return menu + "(9) Quit";
     }
 
     private String showDoubleSplitter() {
@@ -167,7 +168,7 @@ public class BibliotecaService {
         return checkoutResource(movieList.stream(), m -> m.getName().equals(movieName));
     }
 
-    private <T extends LibraryResource>boolean checkoutResource(Stream<T> resourceStream, Predicate<T> predicate) {
+    private <T extends LibraryResource> boolean checkoutResource(Stream<T> resourceStream, Predicate<T> predicate) {
         return resourceStream
                 .filter(LibraryResource::isAvailable)
                 .filter(predicate)
