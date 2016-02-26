@@ -11,24 +11,17 @@ public class BibliotecaApp {
 
     public static void biblioteca(Scanner scanner, PrintStream ps) {
         BibliotecaService bibliotecaService = new BibliotecaService();
-        print(ps, bibliotecaService.welcome());
-        print(ps, bibliotecaService.showMenu());
-        String output = getInput(scanner, ps, new InputHandler("Please choose (item number):",
-                input -> bibliotecaService.dispatcher(input)));
-        while (output != null) {
-            print(ps, output);
-            print(ps, bibliotecaService.showMenu());
-            output = getInput(scanner, ps, new InputHandler("Please choose (item number):",
-                    input -> bibliotecaService.dispatcher(input)));
+
+        Action action = bibliotecaService.dispatcher(null);
+        while(action != null) {
+            print(ps, action.run());
+            if(action.isInputAction())
+                action.setInput(scanner.nextLine());
+            action = bibliotecaService.dispatcher(action);
         }
     }
 
     private static void print(PrintStream printStream, String message) {
         printStream.println("\n" + message);
-    }
-
-    public static String getInput(Scanner scanner, PrintStream ps, InputHandler inputHandler) {
-        print(ps, inputHandler.getHint());
-        return inputHandler.run(scanner.nextLine());
     }
 }

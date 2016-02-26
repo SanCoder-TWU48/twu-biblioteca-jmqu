@@ -4,11 +4,21 @@ public class Book {
     private String name;
     private String author;
     private String publishedYear;
+    private boolean isAvailable;
 
     public Book(String name, String author, String publishedYear) {
         this.name = name;
         this.author = author;
         this.publishedYear = publishedYear;
+        this.isAvailable = true;
+    }
+
+    public void checkout() {
+        isAvailable = false;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
     public String getName() {
