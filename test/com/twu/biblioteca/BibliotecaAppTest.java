@@ -263,7 +263,7 @@ public class BibliotecaAppTest {
                 "Login success.",
                 expectedLoggedMenu,
                 expectedBye);
-        BibliotecaApp.biblioteca(new Scanner("8\nadmin\n111-1111\n9\n"), new PrintStream(outputStream));
+        BibliotecaApp.biblioteca(new Scanner("8\n111-1111\nadmin\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 
@@ -280,7 +280,31 @@ public class BibliotecaAppTest {
                 "Login failed.",
                 expectedMenu,
                 expectedBye);
-        BibliotecaApp.biblioteca(new Scanner("8\nadmin\n222-1111\n9\n"), new PrintStream(outputStream));
+        BibliotecaApp.biblioteca(new Scanner("8\n111-1111\nwrong_pass\n9\n"), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_be_able_to_show_user_info_when_logged() {
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                "",
+                "Please input your library number: ",
+                "",
+                "Please input your password: ",
+                "",
+                "Login success.",
+                expectedLoggedMenu,
+                "",
+                "====================",
+                "Name: ADMIN",
+                "E-mail: ADDRESS1",
+                "Phone: 11111111",
+                "--------------------",
+                expectedLoggedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("8\n111-1111\nadmin\n8\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 }

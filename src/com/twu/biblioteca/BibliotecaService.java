@@ -6,6 +6,7 @@ import com.twu.biblioteca.model.Movie;
 import com.twu.biblioteca.model.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 
 public class BibliotecaService {
 
-    private List<User> userList;
+    private HashMap<String, User> userList;
     private List<Book> bookList;
     private List<Movie> movieList;
 
@@ -22,9 +23,9 @@ public class BibliotecaService {
     }
 
     private void initData() {
-        userList = new ArrayList<User>();
-        userList.add(new User("admin", "111-1111", "ADMIN", "ADDRESS1", "11111111"));
-        userList.add(new User("user", "222-2222", "USER", "ADDRESS2", "22222222"));
+        userList = new HashMap<String, User>();
+        userList.put("111-1111", new User("111-1111", "admin", "ADMIN", "ADDRESS1", "11111111"));
+        userList.put("222-2222", new User("222-2222", "user", "USER", "ADDRESS2", "22222222"));
 
         bookList = new ArrayList<Book>();
         bookList.add(new Book("Book1", "Author1", "2003"));
@@ -53,7 +54,8 @@ public class BibliotecaService {
             case "invalid_menu_item":
             case "login_success":
             case "login_fail":
-                if(action.getContext("logged").equals("true"))
+            case "user_info":
+                if(isLogged(action))
                     return new Action("show_menu", Action.OUTPUT_INPUT, () -> showMenu(true), action.getAllContext());
                 else
                     return new Action("show_menu", Action.OUTPUT_INPUT, () -> showMenu(false), action.getAllContext());
@@ -70,7 +72,10 @@ public class BibliotecaService {
                     case "5":
                         return new Action("checkout_movie", Action.OUTPUT_INPUT, this::movieCheckoutHint, action.getAllContext());
                     case "8":
-                        return new Action("login", Action.OUTPUT_INPUT, this::loginHint, action.getAllContext());
+                        if(isLogged(action))
+                            return new Action("user_info", Action.OUTPUT_ONLY, () -> userInfo(action.getContext("library_number")), action.getAllContext());
+                        else
+                            return new Action("login", Action.OUTPUT_INPUT, this::loginHint, action.getAllContext());
                     case "9":
                         return new Action("quit", Action.OUTPUT_ONLY, this::sayGoodbye, action.getAllContext());
                     default:
@@ -104,8 +109,22 @@ public class BibliotecaService {
         }
     }
 
+    private String userInfo(String libraryNumber) {
+        User user = userList.get(libraryNumber);
+        return String.join("\n",
+                showDoubleSplitter(),
+                "Name: " + user.getName(),
+                "E-mail: " + user.getEmail(),
+                "Phone: " + user.getPhoneNum(),
+                showSingleSplitter());
+    }
+
+    private boolean isLogged(Action action) {
+        return action.getContext("logged").equals("true");
+    }
+
     private boolean userValidate(String library_number, String password) {
-        return userList.stream()
+        return userList.values().stream()
                 .filter(u -> u.validate(library_number, password))
                 .count() > 0;
     }

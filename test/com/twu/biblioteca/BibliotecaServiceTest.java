@@ -220,30 +220,30 @@ public class BibliotecaServiceTest {
     @Test
     public void should_save_input_as_context_and_give_a_password_action_when_action_is_login() {
         Action action = new Action("login", Action.OUTPUT_INPUT, null);
-        action.setInput("admin");
+        action.setInput("111-1111");
         assertEquals("password", bibliotecaService.dispatcher(action).getType());
-        assertEquals("admin", bibliotecaService.dispatcher(action).getContext("library_number"));
+        assertEquals("111-1111", bibliotecaService.dispatcher(action).getContext("library_number"));
     }
 
     @Test
     public void password_action_should_show_hint_and_ask_library_number() {
         Action action = new Action("login", Action.OUTPUT_INPUT, null);
-        action.setInput("admin");
+        action.setInput("111-1111");
         assertEquals("Please input your password: ", bibliotecaService.dispatcher(action).run());
     }
 
     @Test
     public void should_validate_user_input_and_save_logged_as_context_and_give_a_login_success_action_when_action_is_password() {
-        Action action = new Action("password", Action.OUTPUT_INPUT, null).setContext("library_number", "admin");
-        action.setInput("111-1111");
+        Action action = new Action("password", Action.OUTPUT_INPUT, null).setContext("library_number", "111-1111");
+        action.setInput("admin");
         assertEquals("login_success", bibliotecaService.dispatcher(action).getType());
         assertEquals("true", bibliotecaService.dispatcher(action).getContext("logged"));
     }
 
     @Test
     public void should_remove_library_number_in_context_and_give_a_login_fail_action_when_action_is_password_but_password_is_wrong() {
-        Action action = new Action("password", Action.OUTPUT_INPUT, null).setContext("library_number", "admin");
-        action.setInput("111-2222");
+        Action action = new Action("password", Action.OUTPUT_INPUT, null).setContext("library_number", "111-1111");
+        action.setInput("wrong_pass");
         assertEquals("login_fail", bibliotecaService.dispatcher(action).getType());
         assertEquals("", bibliotecaService.dispatcher(action).getContext("logged"));
         assertEquals("", bibliotecaService.dispatcher(action).getContext("library_number"));
