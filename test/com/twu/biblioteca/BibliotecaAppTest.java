@@ -27,6 +27,7 @@ public class BibliotecaAppTest {
                 "        Menu        ",
                 "(1) List Books",
                 "(2) Checkout Book",
+                "(3) Return Book",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");
@@ -73,10 +74,17 @@ public class BibliotecaAppTest {
                 expectedBooksWithoutBook2,
                 expectedMenu,
                 "",
+                "Please input the book name: ",
+                expectedMenu,
+                expectedAllBooks,
+                expectedMenu,
+                "",
                 "Good bye."
         ) + "\n";
 
-        BibliotecaApp.biblioteca(new Scanner("0\n1\n2\nBook4\n1\n2\nBook2\n1\n2\nBook2\n1\n9\n"), new PrintStream(outputStream));
+        String inputSeq = "0\n1\n2\nBook4\n1\n2\nBook2\n1\n2\nBook2\n1\n3\nBook2\n1\n9\n";
+
+        BibliotecaApp.biblioteca(new Scanner(inputSeq), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 }

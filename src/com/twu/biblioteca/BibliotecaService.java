@@ -38,6 +38,8 @@ public class BibliotecaService {
                         return new Action("list_books", Action.OUTPUT_ONLY, this::listBooks);
                     case "2":
                         return new Action("checkout_book", Action.OUTPUT_INPUT, this::checkoutHint);
+                    case "3":
+                        return new Action("return_book", Action.OUTPUT_INPUT, this::returnHint);
                     case "9":
                         return new Action("quit", Action.OUTPUT_ONLY, this::sayGoodbye);
                     default:
@@ -47,6 +49,9 @@ public class BibliotecaService {
                 return checkoutBook(action.getInput()) ?
                         new Action("checkout_success", Action.OUTPUT_ONLY, this::checkoutSuccess) :
                         new Action("checkout_fail", Action.OUTPUT_ONLY, this::checkoutFail);
+            case "return_book":
+                returnBook(action.getInput());
+                return new Action("show_menu", Action.OUTPUT_INPUT, this::showMenu);
             case "quit":
             default:
                 return null;
@@ -73,6 +78,7 @@ public class BibliotecaService {
         return "        Menu        \n" +
                 "(1) List Books\n" +
                 "(2) Checkout Book\n" +
+                "(3) Return Book\n" +
                 "(9) Quit";
     }
 
@@ -96,7 +102,19 @@ public class BibliotecaService {
                 .count() > 0;
     }
 
+    private boolean returnBook(String bookName) {
+        return bookList.stream()
+                .filter(b -> !b.isAvailable())
+                .filter(book -> book.getName().equals(bookName))
+                .peek(Book::checkin)
+                .count() > 0;
+    }
+
     private String checkoutHint() {
+        return "Please input the book name: ";
+    }
+
+    private String returnHint() {
         return "Please input the book name: ";
     }
 

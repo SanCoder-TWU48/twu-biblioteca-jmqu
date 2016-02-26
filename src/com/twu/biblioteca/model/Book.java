@@ -17,6 +17,10 @@ public class Book {
         isAvailable = false;
     }
 
+    public void checkin() {
+        isAvailable = true;
+    }
+
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -44,4 +48,6 @@ public class Book {
     public void setPublishedYear(String publishedYear) {
         this.publishedYear = publishedYear;
     }
+
+
 }

@@ -38,6 +38,7 @@ public class BibliotecaServiceTest {
                 "        Menu        ",
                 "(1) List Books",
                 "(2) Checkout Book",
+                "(3) Return Book",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");
@@ -102,7 +103,6 @@ public class BibliotecaServiceTest {
         assertEquals("Thank you! Enjoy the book", successAction.run());
         Action menuAction = bibliotecaService.dispatcher(successAction);
         menuAction.setInput("1");
-        assertEquals("show_menu", menuAction.getType());
         assertEquals(expectedOutput, bibliotecaService.dispatcher(menuAction).run());
     }
 
@@ -118,6 +118,33 @@ public class BibliotecaServiceTest {
         Action failAction = bibliotecaService.dispatcher(checkoutAction);
         assertEquals("checkout_fail", failAction.getType());
         assertEquals("That book is not available.", failAction.run());
+    }
+
+    @Test
+    public void should_give_a_return_book_action_when_action_is_menu_and_input_is_3() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("3");
+        assertEquals("return_book", bibliotecaService.dispatcher(action).getType());
+    }
+
+    @Test
+    public void return_book_action_should_ask_for_book_name() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("3");
+        assertEquals("Please input the book name: ", bibliotecaService.dispatcher(action).run());
+    }
+
+    @Test
+    public void should_return_the_input_book_when_action_is_a_checkout_book_action() {
+        String expectedOutput = String.join("\n",
+                "Book1\tAuthor1\t2003",
+                "Book2\tAuthor2\t2005",
+                "Book3\tAuthor3\t2013");
+        Action action = new Action("return_book", Action.OUTPUT_INPUT, null);
+        action.setInput("Book2");
+        Action menuAction = bibliotecaService.dispatcher(action);
+        menuAction.setInput("1");
+        assertEquals(expectedOutput, bibliotecaService.dispatcher(menuAction).run());
     }
 
     @Test
