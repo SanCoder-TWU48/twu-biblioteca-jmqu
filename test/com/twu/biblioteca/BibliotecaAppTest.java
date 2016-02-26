@@ -17,6 +17,7 @@ public class BibliotecaAppTest {
     private String expectedAllBooks;
     private String expectedWelcome;
     private String expectedBye;
+    private String expectedAllMovies;
 
     @Before
     public void setUp() {
@@ -37,6 +38,11 @@ public class BibliotecaAppTest {
                 "Book1\tAuthor1\t2003",
                 "Book2\tAuthor2\t2005",
                 "Book3\tAuthor3\t2013");
+        expectedAllMovies = String.join("\n",
+                "",
+                "Movie1\tDirector1\t2003\t8",
+                "Movie2\tDirector2\t2005\t5",
+                "Movie3\tDirector3\t2013\tunrated");
         expectedWelcome = "\nWelcome to Biblioteca!";
         expectedBye = "\nGood bye.\n";
     }
@@ -158,6 +164,18 @@ public class BibliotecaAppTest {
         String inputSeq = "3\nBook4\n9\n";
 
         BibliotecaApp.biblioteca(new Scanner(inputSeq), new PrintStream(outputStream));
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+
+    @Test
+    public void biblioteca_should_be_able_to_list_movies_in_menu() {
+        String expectedOutput = String.join("\n",
+                expectedWelcome,
+                expectedMenu,
+                expectedAllMovies,
+                expectedMenu,
+                expectedBye);
+        BibliotecaApp.biblioteca(new Scanner("4\n9\n"), new PrintStream(outputStream));
         assertEquals(expectedOutput, outputStream.toString());
     }
 }

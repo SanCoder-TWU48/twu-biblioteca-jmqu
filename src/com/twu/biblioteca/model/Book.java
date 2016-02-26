@@ -1,28 +1,15 @@
 package com.twu.biblioteca.model;//Created by SanCoder on 2/24/16.
 
-public class Book {
+public class Book extends LibraryResource {
     private String name;
     private String author;
     private String publishedYear;
-    private boolean isAvailable;
 
     public Book(String name, String author, String publishedYear) {
+        super();
         this.name = name;
         this.author = author;
         this.publishedYear = publishedYear;
-        this.isAvailable = true;
-    }
-
-    public void checkout() {
-        isAvailable = false;
-    }
-
-    public void checkin() {
-        isAvailable = true;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
     }
 
     public String getName() {
@@ -48,6 +35,4 @@ public class Book {
     public void setPublishedYear(String publishedYear) {
         this.publishedYear = publishedYear;
     }
-
-
 }

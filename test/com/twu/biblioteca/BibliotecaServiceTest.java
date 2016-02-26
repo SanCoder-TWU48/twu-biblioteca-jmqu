@@ -165,6 +165,24 @@ public class BibliotecaServiceTest {
     }
 
     @Test
+    public void should_give_a_list_movies_action_when_action_is_menu_and_input_is_4() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("4");
+        assertEquals("list_movies", bibliotecaService.dispatcher(action).getType());
+    }
+
+    @Test
+    public void list_books_action_should_show_all_available_movies_with_detail() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("4");
+        String expectedOutput = String.join("\n",
+                "Movie1\tDirector1\t2003\t8",
+                "Movie2\tDirector2\t2005\t5",
+                "Movie3\tDirector3\t2013\tunrated");
+        assertEquals(expectedOutput, bibliotecaService.dispatcher(action).run());
+    }
+
+    @Test
     public void should_give_a_quit_action_when_action_is_menu_and_input_is_9() {
         Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
         action.setInput("9");
