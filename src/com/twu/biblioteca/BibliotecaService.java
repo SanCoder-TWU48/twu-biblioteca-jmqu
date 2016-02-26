@@ -78,11 +78,13 @@ public class BibliotecaService {
     }
 
     private String showMenuBody() {
-        return "        Menu        \n" +
-                "(1) List Books\n" +
-                "(2) Checkout Book\n" +
-                "(3) Return Book\n" +
-                "(9) Quit";
+        return String.join("\n",
+                "        Menu        ",
+                "(1) List Books",
+                "(2) Checkout Book",
+                "(3) Return Book",
+                "(4) List Movies",
+                "(9) Quit");
     }
 
     private String showDoubleSplitter() {

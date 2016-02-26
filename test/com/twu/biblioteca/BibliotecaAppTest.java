@@ -28,6 +28,7 @@ public class BibliotecaAppTest {
                 "(1) List Books",
                 "(2) Checkout Book",
                 "(3) Return Book",
+                "(4) List Movies",
                 "(9) Quit",
                 "--------------------",
                 "Please choose (item number):");
