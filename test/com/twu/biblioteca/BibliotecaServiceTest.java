@@ -101,15 +101,24 @@ public class BibliotecaServiceTest {
     }
 
     @Test
-    public void should_give_a_checkout_book_action_when_action_is_menu_and_input_is_2() {
+    public void should_give_a_ask_login_action_when_action_is_menu_and_input_is_2() {
         Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("2");
+        assertEquals("ask_login", bibliotecaService.dispatcher(action).getType());
+        assertEquals("Please login first.", bibliotecaService.dispatcher(action).run());
+    }
+
+
+    @Test
+    public void should_give_a_checkout_book_action_when_action_is_menu_and_input_is_2() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null).setContext("logged", "true");
         action.setInput("2");
         assertEquals("checkout_book", bibliotecaService.dispatcher(action).getType());
     }
 
     @Test
     public void checkout_book_action_should_ask_for_book_name() {
-        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null).setContext("logged", "true");
         action.setInput("2");
         assertEquals("Please input the book name: ", bibliotecaService.dispatcher(action).run());
     }
@@ -130,7 +139,7 @@ public class BibliotecaServiceTest {
 
     @Test
     public void should_give_a_checkout_fail_action_when_book_is_not_available() {
-        Action oldCheckoutAction = new Action("checkout_book", Action.OUTPUT_INPUT, null);
+        Action oldCheckoutAction = new Action("checkout_book", Action.OUTPUT_INPUT, null).setContext("logged", "true");
         oldCheckoutAction.setInput("Book2");
         Action successAction = bibliotecaService.dispatcher(oldCheckoutAction);
         Action menuAction = bibliotecaService.dispatcher(successAction);
@@ -143,15 +152,23 @@ public class BibliotecaServiceTest {
     }
 
     @Test
-    public void should_give_a_return_book_action_when_action_is_menu_and_input_is_3() {
+    public void should_give_a_ask_login_action_when_action_is_menu_and_input_is_3() {
         Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        action.setInput("3");
+        assertEquals("ask_login", bibliotecaService.dispatcher(action).getType());
+        assertEquals("Please login first.", bibliotecaService.dispatcher(action).run());
+    }
+
+    @Test
+    public void should_give_a_return_book_action_when_action_is_menu_and_input_is_3() {
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null).setContext("logged", "true");
         action.setInput("3");
         assertEquals("return_book", bibliotecaService.dispatcher(action).getType());
     }
 
     @Test
     public void return_book_action_should_ask_for_book_name() {
-        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
+        Action action = new Action("show_menu", Action.OUTPUT_INPUT, null).setContext("logged", "true");
         action.setInput("3");
         assertEquals("Please input the book name: ", bibliotecaService.dispatcher(action).run());
     }
@@ -193,7 +210,7 @@ public class BibliotecaServiceTest {
     }
 
     @Test
-    public void list_books_action_should_show_all_available_movies_with_detail() {
+    public void list_movies_action_should_show_all_available_movies_with_detail() {
         Action action = new Action("show_menu", Action.OUTPUT_INPUT, null);
         action.setInput("4");
         String expectedOutput = String.join("\n",

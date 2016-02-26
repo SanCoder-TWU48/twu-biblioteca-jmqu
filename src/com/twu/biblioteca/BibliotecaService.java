@@ -55,7 +55,8 @@ public class BibliotecaService {
             case "login_success":
             case "login_fail":
             case "user_info":
-                if(isLogged(action))
+            case "ask_login":
+                if (isLogged(action))
                     return new Action("show_menu", Action.OUTPUT_INPUT, () -> showMenu(true), action.getAllContext());
                 else
                     return new Action("show_menu", Action.OUTPUT_INPUT, () -> showMenu(false), action.getAllContext());
@@ -64,15 +65,24 @@ public class BibliotecaService {
                     case "1":
                         return new Action("list_books", Action.OUTPUT_ONLY, this::listBooks, action.getAllContext());
                     case "2":
-                        return new Action("checkout_book", Action.OUTPUT_INPUT, this::bookCheckoutHint, action.getAllContext());
+                        if (isLogged(action))
+                            return new Action("checkout_book", Action.OUTPUT_INPUT, this::bookCheckoutHint, action.getAllContext());
+                        else
+                            return new Action("ask_login", Action.OUTPUT_ONLY, this::askLogin, action.getAllContext());
                     case "3":
-                        return new Action("return_book", Action.OUTPUT_INPUT, this::returnHint, action.getAllContext());
+                        if (isLogged(action))
+                            return new Action("return_book", Action.OUTPUT_INPUT, this::returnHint, action.getAllContext());
+                        else
+                            return new Action("ask_login", Action.OUTPUT_ONLY, this::askLogin, action.getAllContext());
                     case "4":
                         return new Action("list_movies", Action.OUTPUT_ONLY, this::listMovies, action.getAllContext());
                     case "5":
-                        return new Action("checkout_movie", Action.OUTPUT_INPUT, this::movieCheckoutHint, action.getAllContext());
+                        if (isLogged(action))
+                            return new Action("checkout_movie", Action.OUTPUT_INPUT, this::movieCheckoutHint, action.getAllContext());
+                        else
+                            return new Action("ask_login", Action.OUTPUT_ONLY, this::askLogin, action.getAllContext());
                     case "8":
-                        if(isLogged(action))
+                        if (isLogged(action))
                             return new Action("user_info", Action.OUTPUT_ONLY, () -> userInfo(action.getContext("library_number")), action.getAllContext());
                         else
                             return new Action("login", Action.OUTPUT_INPUT, this::loginHint, action.getAllContext());
@@ -256,6 +266,10 @@ public class BibliotecaService {
 
     private String loginFail() {
         return "Login failed.";
+    }
+
+    private String askLogin() {
+        return "Please login first.";
     }
 
     private String sayGoodbye() {
